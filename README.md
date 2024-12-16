@@ -20,6 +20,8 @@ A slight wrinkle is that relative’s laptop is running Catalina, and they refus
 
 Needs access to user’s calendar(s) (via EventKit), and runs as agent (UIElement), ie: does not appear in the Dock as a running app.
 
+The main window runs at desktop level, so is always behind all main app windows, but just above the desktop picture.
+
 ![Screenshot 2024-12-16 at 13 41 10](https://github.com/user-attachments/assets/e392e9b5-481f-414f-b070-7559ea5c07db)
 
 ![Screenshot 2024-12-16 at 13 41 20](https://github.com/user-attachments/assets/5d613451-2fb5-46ff-90c9-d8ba1026d964)

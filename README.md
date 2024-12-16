@@ -18,3 +18,8 @@ I was interested in finding out a little about SwiftUI, so this initial version 
 
 A slight wrinkle is that relative’s laptop is running Catalina, and they refuse to consider changing up to something more contemporary. So there are a few places where what’s been done was limited by the versions of Swift and SwiftUI available with a target of macOS 10.15.7 in Xcode.
 
+Needs access to user’s calendar(s) (via EventKit), and runs as agent (UIElement), ie: does not appear in the Dock as a running app.
+
+![Screenshot 2024-12-16 at 13 41 10](https://github.com/user-attachments/assets/e392e9b5-481f-414f-b070-7559ea5c07db)
+
+![Screenshot 2024-12-16 at 13 41 20](https://github.com/user-attachments/assets/5d613451-2fb5-46ff-90c9-d8ba1026d964)

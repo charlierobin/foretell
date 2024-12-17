@@ -49,36 +49,46 @@ class ExternalModel: ObservableObject
                 
                 let formatter = DateFormatter()
                 
-                formatter.dateFormat = "dd/MM/yyyy (EE) (HH:mm)"
+                formatter.dateFormat = "dd/MM/yyyy (EE) (H:mm)"
                 
-                for (idx, event) in events!.enumerated()
+                var lastEventTitle = ""
+                var counter = 1
+                
+                for (_, event) in events!.enumerated()
                 {
-                    let date : String = formatter.string(from: event.startDate)
-                    
-                    let dateBits = date.components(separatedBy: " ")
-                    
-                    col1 = col1 + dateBits[0]
-                    col2 = col2 + dateBits[1]
-                    col3 = col3 + event.title
-                    
-                    let testIdx = -1 // (set to -1 for no test)
-                    
-                    if (Calendar.current.isDateInToday(event.startDate) || idx == testIdx)
+                    if counter > Constants.limit
                     {
-                        col3 = col3 + " " + dateBits[2]
-                    }
-                    else
-                    {
-                        col3 = col3 + " "
+                        break
                     }
                     
-                    if (idx != events!.endIndex-1)
+                    if event.title != lastEventTitle
                     {
+                        let date : String = formatter.string(from: event.startDate)
+                        
+                        let dateBits = date.components(separatedBy: " ")
+                        
+                        col1 = col1 + dateBits[0]
+                        col2 = col2 + dateBits[1]
+                        col3 = col3 + event.title
+                        
+                        if Calendar.current.isDateInToday(event.startDate) && !event.isAllDay
+                        {
+                            col3 = col3 + " " + dateBits[2]
+                        }
+
                         col1 = col1 + Constants.newLine
                         col2 = col2 + Constants.newLine
                         col3 = col3 + Constants.newLine
+
+                        lastEventTitle = event.title
+                        
+                        counter = counter + 1
                     }
                 }
+                
+                col1 = col1.trimmingCharacters(in: .whitespacesAndNewlines)
+                col2 = col2.trimmingCharacters(in: .whitespacesAndNewlines)
+                col3 = col3.trimmingCharacters(in: .whitespacesAndNewlines)
             }
             else
             {
@@ -183,19 +193,21 @@ class ExternalModel: ObservableObject
     {
         let calendar = Calendar.current
         
-        var oneDayAgoComponents = DateComponents()
-        oneDayAgoComponents.day = -1
-        let oneDayAgo = calendar.date(byAdding: oneDayAgoComponents, to: Date(), wrappingComponents: false)
+        var startComponents = DateComponents()
+        startComponents.day = 0
         
-        var oneYearFromNowComponents = DateComponents()
-        oneYearFromNowComponents.year = 1
-        let oneYearFromNow = calendar.date(byAdding: oneYearFromNowComponents, to: Date(), wrappingComponents: false)
+        let today = calendar.date(byAdding: startComponents, to: Date(), wrappingComponents: false)
+        
+        var endComponents = DateComponents()
+        endComponents.year = 1
+        
+        let oneYearFromNow = calendar.date(byAdding: endComponents, to: Date(), wrappingComponents: false)
         
         var predicate: NSPredicate? = nil
         
-        if let anAgo = oneDayAgo, let aNow = oneYearFromNow
+        if let startToday = today, let inOneYearFromNow = oneYearFromNow
         {
-            predicate = store.predicateForEvents(withStart: anAgo, end: aNow, calendars: cals)
+            predicate = store.predicateForEvents(withStart: startToday, end: inOneYearFromNow, calendars: cals)
         }
         
         return predicate!
